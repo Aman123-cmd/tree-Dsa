@@ -47,27 +47,45 @@ void levelOrder(Tree*root){
     }
 
 }
-int height(Tree * root){
-    if(!root) return 0;
-    int leftSubTree = height(root->left);
-    int rightSubTree = height(root->right);
-    int ans = max(leftSubTree,rightSubTree)+1;
-    return ans;
+void leftBoundary(Tree * root){
+    if(!root) return ;
+    if(root->left==NULL && root->right==NULL){
+        return ;
+    }
+    cout<<root->data<<" ";
+    if(root->left!=NULL) leftBoundary(root->left);
+    else leftBoundary(root->right);
 }
-bool isBalanced(Tree* root){
-    if(!root) return true;
-    int lh = height(root->left);
-    int rh = height(root->right);
-    bool diff = abs(lh-rh)<=1;
-    bool la = isBalanced(root->left);
-    bool ra = isBalanced(root->right);
-    return (la&& ra && diff);
+void rightBoundary(Tree * root){
+    if(!root) return ;
+    if(root->left==NULL && root->right==NULL) return ;
+   
+    if(root->right!=NULL) rightBoundary(root->right);
+    else rightBoundary(root->left);
+    cout<<root->data<<" ";
+}
+void leafBoundary(Tree * root){
+    if(!root) return;
+    if(root->left==NULL && root->right==NULL) {
+        cout<<root->data<<" ";
+        return;
+    }
+    leafBoundary(root->left);
+    leafBoundary(root->right);
+
+
+}
+void boundaryTraversal(Tree * root){
+    if(!root) return ;
+    leftBoundary(root->left);
+    leafBoundary(root->left);
+    leafBoundary(root->right);
+    rightBoundary(root->left);
 }
 int main(){
     Tree * root = createTree();
+    cout<<"printing level order:->"<<endl;
     levelOrder(root);
-    bool ans = isBalanced(root);
-    if(ans) cout<<"Balanced Binary tree";
-    else cout<<"not a Balanced binary tree";
-
+    cout<<"printinf boundary traversal:->"<<endl;
+    boundaryTraversal(root);
 }

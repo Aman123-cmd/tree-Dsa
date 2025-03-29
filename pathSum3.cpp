@@ -1,7 +1,8 @@
 #include<iostream>
 #include<queue>
-#include<algorithm>
+#include<limits.h>
 using namespace std;
+int ans = 0;
 class Tree{
 public:
 int data;
@@ -47,27 +48,24 @@ void levelOrder(Tree*root){
     }
 
 }
-int height(Tree * root){
-    if(!root) return 0;
-    int leftSubTree = height(root->left);
-    int rightSubTree = height(root->right);
-    int ans = max(leftSubTree,rightSubTree)+1;
-    return ans;
+void helper(Tree * root,int targetSum){
+    if(!root) return ;
+    if(targetSum==root->data){
+        ans++;
+    }
+    helper(root->left,targetSum-root->data);
+    helper(root->right,targetSum-root->data);
 }
-bool isBalanced(Tree* root){
-    if(!root) return true;
-    int lh = height(root->left);
-    int rh = height(root->right);
-    bool diff = abs(lh-rh)<=1;
-    bool la = isBalanced(root->left);
-    bool ra = isBalanced(root->right);
-    return (la&& ra && diff);
+int pathSum(Tree * root,int targetSum){
+    if(root){
+        helper(root,targetSum);
+        pathSum(root->left,targetSum);
+        pathSum(root->right,targetSum);
+    }
+    return ans;
 }
 int main(){
     Tree * root = createTree();
-    levelOrder(root);
-    bool ans = isBalanced(root);
-    if(ans) cout<<"Balanced Binary tree";
-    else cout<<"not a Balanced binary tree";
-
+    cout<<"printing level order->"<<endl;
+    cout<<"Total no of paths ->"<<pathSum(root,8);
 }
